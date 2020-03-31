@@ -1,7 +1,7 @@
 # Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
 * Студент: [Иван Романов](https://up.htmlacademy.ru/ecmascript/11/user/272763).
-* Наставник: `Неизвестно`.
+* Наставник: [Руфат Хасларов](https://htmlacademy.ru/profile/id372587).
 
 ---
 
