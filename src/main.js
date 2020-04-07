@@ -4,12 +4,9 @@ import {createFilterTemplate} from './components/filter';
 import {createBoardTemplate} from './components/board';
 import {createButtonMore} from './components/button-more';
 import {createSiteMenuTemplate} from './components/menu';
+import {render} from 'utils';
 
 const CARDS_QTY = 3;
-
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 const renderTasks = (tasksContainer, tasksQty) => {
   render(tasksContainer, createTaskFormTemplate());
