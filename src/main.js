@@ -4,7 +4,7 @@ import {createFilterTemplate} from './components/filter';
 import {createBoardTemplate} from './components/board';
 import {createButtonMore} from './components/button-more';
 import {createSiteMenuTemplate} from './components/menu';
-import {render} from 'utils';
+import {render} from './utils';
 
 const CARDS_QTY = 3;
 
