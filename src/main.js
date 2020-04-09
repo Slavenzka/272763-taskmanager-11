@@ -21,9 +21,7 @@ const renderContent = (mainElement) => {
   const renderTasks = (tasksContainer, tasksQty, taskData) => {
     render(tasksContainer, createTaskFormTemplate(taskData[0]));
 
-    for (let i = 1; i < tasksQty; i++) {
-      render(tasksContainer, createTaskCardTemplate(taskData[i]));
-    }
+    taskData.slice(1, tasksQty).forEach((task) => render(tasksContainer, createTaskCardTemplate(task)));
   };
 
   render(mainElement, createFilterTemplate(filters));
