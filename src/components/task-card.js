@@ -10,7 +10,7 @@ export const createTaskCardTemplate = (task) => {
   const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? `${formatTime(dueDate)}` : ``;
 
-  const repeatClass = `card--repeat`;
+  const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
   const deadlineClass = isExpired ? `card--deadline` : ``;
   const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
   const favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`;
@@ -23,7 +23,7 @@ export const createTaskCardTemplate = (task) => {
             <button type="button" class="card__btn card__btn--edit">
               edit
             </button>
-            <button type="button" class="card__btn ${archiveButtonInactiveClass}">
+            <button type="button" class="card__btn card__btn--archive ${archiveButtonInactiveClass}">
               archive
             </button>
             <button
