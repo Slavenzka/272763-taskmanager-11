@@ -6,19 +6,21 @@ import {createButtonMore} from './components/button-more';
 import {createSiteMenuTemplate} from './components/menu';
 import {render} from './utils';
 import {generateFilters} from './mock/filter';
+import {generateTasks} from './mock/task';
 
 const CARDS_QTY = 3;
 
-const renderTasks = (tasksContainer, tasksQty) => {
-  render(tasksContainer, createTaskFormTemplate());
+const renderTasks = (tasksContainer, tasksQty, taskData) => {
+  render(tasksContainer, createTaskFormTemplate(taskData[0]));
 
-  for (let i = 0; i < tasksQty; i++) {
-    render(tasksContainer, createTaskCardTemplate());
+  for (let i = 1; i < taskData.length; i++) {
+    render(tasksContainer, createTaskCardTemplate(taskData[i]));
   }
 };
 
 const renderContent = (mainElement) => {
   const filters = generateFilters();
+  const tasks = generateTasks(CARDS_QTY);
 
   render(mainElement, createFilterTemplate(filters));
   render(mainElement, createBoardTemplate());
@@ -26,7 +28,7 @@ const renderContent = (mainElement) => {
   const boardContainer = siteMainElement.querySelector(`.board`);
   const boardTasksContainer = siteMainElement.querySelector(`.board__tasks`);
 
-  renderTasks(boardTasksContainer, CARDS_QTY);
+  renderTasks(boardTasksContainer, CARDS_QTY, tasks);
   render(boardContainer, createButtonMore());
 };
 
