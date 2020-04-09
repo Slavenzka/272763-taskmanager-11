@@ -5,6 +5,7 @@ import {createBoardTemplate} from './components/board';
 import {createButtonMore} from './components/button-more';
 import {createSiteMenuTemplate} from './components/menu';
 import {render} from './utils';
+import {generateFilters} from './mock/filter';
 
 const CARDS_QTY = 3;
 
@@ -17,7 +18,9 @@ const renderTasks = (tasksContainer, tasksQty) => {
 };
 
 const renderContent = (mainElement) => {
-  render(mainElement, createFilterTemplate());
+  const filters = generateFilters();
+
+  render(mainElement, createFilterTemplate(filters));
   render(mainElement, createBoardTemplate());
 
   const boardContainer = siteMainElement.querySelector(`.board`);
