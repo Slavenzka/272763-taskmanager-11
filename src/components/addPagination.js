@@ -14,7 +14,7 @@ export const addPagination = (button, tasks, taskCount) => {
       .forEach((task) => render(boardTasksContainer, createTaskCardTemplate(task)));
   };
 
-  const isAllElementsLoaded = () => {
+  const checkAllElementsLoaded = () => {
     if (taskCount >= tasks.length) {
       button.remove();
     }
@@ -22,6 +22,6 @@ export const addPagination = (button, tasks, taskCount) => {
 
   button.addEventListener(`click`, () => {
     next();
-    isAllElementsLoaded();
+    checkAllElementsLoaded();
   });
 };
