@@ -7,10 +7,8 @@ import {createSiteMenuTemplate} from './components/menu';
 import {render} from './utils';
 import {generateFilters} from './mock/filter';
 import {generateTasks} from './mock/task';
-
-const CARDS_QTY = 22;
-const SHOWING_TASKS_COUNT_ON_START = 8;
-const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
+import {CARDS_QTY, SHOWING_TASKS_COUNT_ON_START} from './const';
+import {addPagination} from './components/addPagination';
 
 const renderContent = (mainElement) => {
   const filters = generateFilters();
@@ -34,18 +32,7 @@ const renderContent = (mainElement) => {
   render(boardContainer, createButtonMore());
 
   const loadMoreButton = boardContainer.querySelector(`.load-more`);
-  loadMoreButton.addEventListener(`click`, () => {
-    const prevTaskCount = showingTaskCount;
-    showingTaskCount += SHOWING_TASKS_COUNT_BY_BUTTON;
-
-    tasks
-      .slice(prevTaskCount, showingTaskCount)
-      .forEach((task) => render(boardTasksContainer, createTaskCardTemplate(task)));
-
-    if (showingTaskCount >= tasks.length) {
-      loadMoreButton.remove();
-    }
-  });
+  addPagination(loadMoreButton, tasks, showingTaskCount);
 };
 
 const siteMainElement = document.querySelector(`.main`);
