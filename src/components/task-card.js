@@ -65,21 +65,21 @@ const createTaskCardTemplate = (task) => {
 export default class Task {
   constructor(task) {
     this._task = task;
-    this._elemenet = null;
+    this._element = null;
   }
 
   getTemplate(task) {
     return createTaskCardTemplate(task);
   }
 
-  getElement(template) {
+  getElement() {
     if (!this._element) {
-      this._elemenet = createNode(template);
+      this._element = createNode(this.getTemplate());
     }
-    return this._elemenet;
+    return this._element;
   }
 
   removeElement() {
-    this._elemenet = null;
+    this._element = null;
   }
 }

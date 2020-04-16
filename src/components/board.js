@@ -24,7 +24,7 @@ export default class Board {
 
   getElement() {
     if (!this._element) {
-      this._element = createNode(createBoardTemplate());
+      this._element = createNode(this.getTemplate());
     }
     return this._element;
   }
