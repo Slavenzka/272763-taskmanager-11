@@ -18,7 +18,7 @@ export const createNode = (template) => {
   return node.firstChild;
 };
 
-export const render = (container, element, location) => {
+export const render = (container, element, location = RENDER_POSITION.BEFOREEND) => {
   switch (location) {
     case RENDER_POSITION.AFTERBEGIN:
       container.prepend(element);
