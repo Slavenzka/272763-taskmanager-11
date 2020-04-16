@@ -154,4 +154,12 @@ export default class TaskEdit {
   removeElement() {
     this._element = null;
   }
+
+  submitHandler(taskListElement, taskComponent) {
+    const editForm = this._element.querySelector(`form`);
+    editForm.addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      taskListElement.replaceChild(taskComponent.getElement(), this._element);
+    });
+  }
 }

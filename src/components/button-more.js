@@ -29,8 +29,8 @@ export default class LoadMoreButton {
   }
 
   setClickHandler(tasksContainer) {
-    const prevTasksCounter = this._tasksCount;
-    this._element.addEventListener(`click`, () => {
+    this._element.addEventListener(`submit`, () => {
+      let prevTasksCounter = this._tasksCount;
       this._tasksCount += SHOWING_TASKS_COUNT_BY_BUTTON;
 
       this._tasks.slice(prevTasksCounter, this._tasksCount)

@@ -82,4 +82,11 @@ export default class Task {
   removeElement() {
     this._element = null;
   }
+
+  editClickHandler(taskListElement, taskEditComponent) {
+    const editButton = this._element.querySelector(`.card__btn--edit`);
+    editButton.addEventListener(`click`, () => {
+      taskListElement.replaceChild(taskEditComponent.getElement(), this._element);
+    });
+  }
 }

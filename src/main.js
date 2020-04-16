@@ -10,25 +10,16 @@ import {render} from './utils';
 import {generateFilters} from './mock/filter';
 import {generateTasks} from './mock/task';
 import {CARDS_QTY, RENDER_POSITION, SHOWING_TASKS_COUNT_ON_START} from './const';
-// import {addPagination} from './components/addPagination';
 
 export const renderTask = (taskListElement, task) => {
-  const onEditButtonClick = () => {
-    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
-  };
-
-  const onEditFormSubmit = (evt) => {
-    evt.preventDefault();
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
-  };
-
   const taskComponent = new TaskComponent(task);
-  const taskEditButton = taskComponent.getElement().querySelector(`.card__btn--edit`);
-  taskEditButton.addEventListener(`click`, onEditButtonClick);
+  taskComponent.getElement();
 
   const taskEditComponent = new TaskEditComponent(task);
-  const editForm = taskEditComponent.getElement().querySelector(`form`);
-  editForm.addEventListener(`submit`, onEditFormSubmit);
+  taskEditComponent.getElement();
+
+  taskComponent.editClickHandler(taskListElement, taskEditComponent);
+  taskEditComponent.submitHandler(taskListElement, taskComponent);
 
   render(taskListElement, taskComponent.getElement());
 };
