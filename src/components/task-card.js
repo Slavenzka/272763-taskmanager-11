@@ -68,8 +68,8 @@ export default class Task {
     this._element = null;
   }
 
-  getTemplate(task) {
-    return createTaskCardTemplate(task);
+  getTemplate() {
+    return createTaskCardTemplate(this._task);
   }
 
   getElement() {

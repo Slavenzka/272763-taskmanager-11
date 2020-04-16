@@ -108,11 +108,11 @@ const createTaskFormTemplate = (task) => {
                   repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
                 </button>
 
-                {isRepeatingTask ? <fieldset class="card__repeat-days">
+                ${isRepeatingTask ? `<fieldset class="card__repeat-days">
                   <div class="card__repeat-days-inner">
                     ${repeatingDaysMarkup}
                   </div>
-                </fieldset> : ``}
+                </fieldset>` : ``}
               </div>
             </div>
 

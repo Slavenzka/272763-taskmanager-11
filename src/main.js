@@ -9,30 +9,10 @@ import SortingComponent from './components/sort';
 import {render} from './utils';
 import {generateFilters} from './mock/filter';
 import {generateTasks} from './mock/task';
-import {CARDS_QTY, SHOWING_TASKS_COUNT_ON_START} from './const';
-import {addPagination} from './components/addPagination';
+import {CARDS_QTY, RENDER_POSITION, SHOWING_TASKS_COUNT_ON_START} from './const';
+// import {addPagination} from './components/addPagination';
 
-const renderContent = (mainElement) => {
-  const renderTasks = (tasksContainer, tasksQty, taskData) => {
-    render(tasksContainer, createTaskFormTemplate(taskData[0]));
-
-    taskData.slice(1, tasksQty).forEach((task) => render(tasksContainer, createTaskCardTemplate(task)));
-  };
-
-  render(mainElement, createFilterTemplate(filters));
-  render(mainElement, createBoardTemplate());
-
-  const boardContainer = siteMainElement.querySelector(`.board`);
-  const boardTasksContainer = siteMainElement.querySelector(`.board__tasks`);
-
-  renderTasks(boardTasksContainer, showingTaskCount, tasks);
-  render(boardContainer, createButtonMore());
-
-  const loadMoreButton = boardContainer.querySelector(`.load-more`);
-  addPagination(loadMoreButton, tasks, showingTaskCount);
-};
-
-const renderTask = (taskListElement, task) => {
+export const renderTask = (taskListElement, task) => {
   const onEditButtonClick = () => {
     taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
   };
@@ -53,14 +33,31 @@ const renderTask = (taskListElement, task) => {
   render(taskListElement, taskComponent.getElement());
 };
 
-const renderBoard = () => {};
+const renderBoard = (boardComponent, tasks) => {
+  render(boardComponent.getElement(), new SortingComponent().getElement(), RENDER_POSITION.AFTERBEGIN);
+  render(boardComponent.getElement(), new TasksComponent().getElement());
 
-let showingTaskCount = SHOWING_TASKS_COUNT_ON_START;
+  const tasksContainer = boardComponent.getElement().querySelector(`.board__tasks`);
+
+  tasks.slice(0, SHOWING_TASKS_COUNT_ON_START)
+    .forEach((task) => {
+      renderTask(tasksContainer, task);
+    });
+
+  const loadMoreButton = new LoadMoreButtonComponent(tasks);
+  render(boardComponent.getElement(), loadMoreButton.getElement());
+  loadMoreButton.setClickHandler(tasksContainer);
+};
+
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-const filters = generateFilters();
 const tasks = generateTasks(CARDS_QTY);
+const filters = generateFilters();
 
 render(siteHeaderElement, new SiteMenuComponent().getElement());
 render(siteMainElement, new FilterComponent(filters).getElement());
+
+const boardComponent = new BoardComponent();
+render(siteMainElement, boardComponent.getElement());
+renderBoard(boardComponent, tasks);

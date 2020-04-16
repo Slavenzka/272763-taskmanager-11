@@ -2,6 +2,7 @@ import {createNode} from '../utils';
 
 const createBoardTemplate = () => (
   `<section class="board container">
+    <div class="board__tasks"></div>
   </section>`
 );
 
