@@ -14,7 +14,7 @@ import {CARDS_QTY, RENDER_POSITION, SHOWING_TASKS_COUNT_ON_START} from './const'
 
 export const renderTask = (taskListElement, task) => {
   const taskComponent = new TaskComponent(task);
-  taskComponent.getElement();
+  const taskElement = taskComponent.getElement();
 
   const taskEditComponent = new TaskEditComponent(task);
   taskEditComponent.getElement();
@@ -23,7 +23,7 @@ export const renderTask = (taskListElement, task) => {
   taskEditComponent.addSubmitHandler(taskListElement, taskComponent);
   taskEditComponent.addEscHandler(taskListElement, taskComponent, taskEditComponent);
 
-  render(taskListElement, taskComponent.getElement());
+  render(taskListElement, taskElement);
 };
 
 const renderBoard = (boardComponent, tasks) => {

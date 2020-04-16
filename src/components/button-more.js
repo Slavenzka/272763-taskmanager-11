@@ -29,7 +29,7 @@ export default class LoadMoreButton {
   }
 
   setClickHandler(tasksContainer) {
-    this._element.addEventListener(`submit`, () => {
+    this._element.addEventListener(`click`, () => {
       let prevTasksCounter = this._tasksCount;
       this._tasksCount += SHOWING_TASKS_COUNT_BY_BUTTON;
 
