@@ -1,4 +1,4 @@
-import {RENDER_POSITION} from 'const';
+import {RENDER_POSITION} from '../const';
 
 const castTimeFormat = (value) => {
   return value < 10 ? `0${value}` : String(value);
