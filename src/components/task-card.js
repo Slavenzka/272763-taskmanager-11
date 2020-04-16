@@ -1,7 +1,7 @@
 import {MONTH_NAMES} from '../const';
-import {formatTime} from '../utils/index';
+import {createNode, formatTime} from '../utils/index';
 
-export const createTaskCardTemplate = (task) => {
+const createTaskCardTemplate = (task) => {
   const {color, description, dueDate, repeatingDays, isArchive, isFavorite} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
@@ -61,3 +61,25 @@ export const createTaskCardTemplate = (task) => {
     </article>`
   );
 };
+
+export default class Task {
+  constructor(task) {
+    this._task = task;
+    this._elemenet = null;
+  }
+
+  getTemplate(task) {
+    return createTaskCardTemplate(task);
+  }
+
+  getElement(template) {
+    if (!this._element) {
+      this._elemenet = createNode(template);
+    }
+    return this._elemenet;
+  }
+
+  removeElement() {
+    this._elemenet = null;
+  }
+}
