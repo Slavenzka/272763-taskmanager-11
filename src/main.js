@@ -6,6 +6,7 @@ import BoardComponent from './components/board';
 import LoadMoreButtonComponent from './components/button-more';
 import SiteMenuComponent from './components/menu';
 import SortingComponent from './components/sort';
+import NoTasksComponent from './components/no-tasks';
 import {render} from './utils';
 import {generateFilters} from './mock/filter';
 import {generateTasks} from './mock/task';
@@ -19,12 +20,20 @@ export const renderTask = (taskListElement, task) => {
   taskEditComponent.getElement();
 
   taskComponent.editClickHandler(taskListElement, taskEditComponent);
-  taskEditComponent.submitHandler(taskListElement, taskComponent);
+  taskEditComponent.addSubmitHandler(taskListElement, taskComponent);
+  taskEditComponent.addEscHandler(taskListElement, taskComponent, taskEditComponent);
 
   render(taskListElement, taskComponent.getElement());
 };
 
 const renderBoard = (boardComponent, tasks) => {
+  const isAllTasksArchived = tasks.every((task) => task.isArchive);
+
+  if (isAllTasksArchived) {
+    render(boardComponent.getElement(), new NoTasksComponent().getElement());
+    return;
+  }
+
   render(boardComponent.getElement(), new SortingComponent().getElement(), RENDER_POSITION.AFTERBEGIN);
   render(boardComponent.getElement(), new TasksComponent().getElement());
 

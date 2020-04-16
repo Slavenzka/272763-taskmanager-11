@@ -155,11 +155,29 @@ export default class TaskEdit {
     this._element = null;
   }
 
-  submitHandler(taskListElement, taskComponent) {
+  replaceEditWithTask(taskListElement, taskComponent) {
+    taskListElement.replaceChild(taskComponent.getElement(), this._element);
+  }
+
+  addSubmitHandler(taskListElement, taskComponent) {
     const editForm = this._element.querySelector(`form`);
+
     editForm.addEventListener(`submit`, (evt) => {
       evt.preventDefault();
-      taskListElement.replaceChild(taskComponent.getElement(), this._element);
+      this.replaceEditWithTask(taskListElement, taskComponent);
     });
+  }
+
+  addEscHandler(taskListElement, taskComponent) {
+    const escKeyHandler = (evt) => {
+      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+      if (isEscKey && document.contains(this._element)) {
+        this.replaceEditWithTask(taskListElement, taskComponent);
+        document.removeEventListener(`keydown`, escKeyHandler);
+      }
+    };
+
+    document.addEventListener(`keydown`, escKeyHandler);
   }
 }

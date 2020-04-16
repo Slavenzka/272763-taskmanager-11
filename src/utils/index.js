@@ -28,3 +28,5 @@ export const render = (container, element, location = RENDER_POSITION.BEFOREEND)
       break;
   }
 };
+
+export const getRanodomBoolean = () => Math.random() > 0.5;

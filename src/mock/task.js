@@ -1,4 +1,5 @@
 import {COLORS} from '../const';
+import {getRanodomBoolean} from '../utils';
 
 const DescriptionItems = [
   `Изучить теорию`,
@@ -46,8 +47,8 @@ const generateTask = () => {
     dueDate,
     repeatingDays: dueDate ? DefaultRepeatingDays : generateRepeatingDays(),
     color: getRandomArrayItem(COLORS),
-    isArchive: true,
-    isFavorite: Math.random() > 0.5,
+    isArchive: getRanodomBoolean(),
+    isFavorite: getRanodomBoolean(),
   };
 };
 
