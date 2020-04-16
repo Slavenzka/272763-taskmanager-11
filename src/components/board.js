@@ -1,4 +1,6 @@
-export const createBoardTemplate = () => (
+import {createNode} from 'utils';
+
+const createBoardTemplate = () => (
   `<section class="board container">
     <div class="board__filter-list">
       <a href="#" class="board__filter" data-sort-type="default">SORT BY DEFAULT</a>
@@ -10,3 +12,24 @@ export const createBoardTemplate = () => (
     </div>
   </section>`
 );
+
+export default class Board {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createBoardTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNode(createBoardTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
