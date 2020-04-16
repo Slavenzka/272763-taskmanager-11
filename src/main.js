@@ -32,7 +32,26 @@ const renderContent = (mainElement) => {
   addPagination(loadMoreButton, tasks, showingTaskCount);
 };
 
-const renderTask = () => {};
+const renderTask = (taskListElement, task) => {
+  const onEditButtonClick = () => {
+    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+  };
+
+  const onEditFormSubmit = (evt) => {
+    evt.preventDefault();
+    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+  };
+
+  const taskComponent = new TaskComponent(task);
+  const taskEditButton = taskComponent.getElement().querySelector(`.card__btn--edit`);
+  taskEditButton.addEventListener(`click`, onEditButtonClick);
+
+  const taskEditComponent = new TaskEditComponent(task);
+  const editForm = taskEditComponent.getElement().querySelector(`form`);
+  editForm.addEventListener(`submit`, onEditFormSubmit);
+
+  render(taskListElement, taskComponent.getElement());
+};
 
 const renderBoard = () => {};
 
