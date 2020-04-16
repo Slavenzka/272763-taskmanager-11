@@ -1,4 +1,4 @@
-import {createNode} from 'utils';
+import {createNode} from '../utils';
 
 const createButtonMore = () => (
   `<button class="load-more" type="button">load more</button>`
