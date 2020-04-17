@@ -1,42 +1,63 @@
-import {createTaskFormTemplate} from './components/task-form';
-import {createTaskCardTemplate} from './components/task-card';
-import {createFilterTemplate} from './components/filter';
-import {createBoardTemplate} from './components/board';
-import {createButtonMore} from './components/button-more';
-import {createSiteMenuTemplate} from './components/menu';
+import TaskEditComponent from './components/task-form';
+import TaskComponent from './components/task-card';
+import TasksComponent from './components/tasks';
+import FilterComponent from './components/filter';
+import BoardComponent from './components/board';
+import LoadMoreButtonComponent from './components/button-more';
+import SiteMenuComponent from './components/menu';
+import SortingComponent from './components/sort';
+import NoTasksComponent from './components/no-tasks';
 import {render} from './utils';
 import {generateFilters} from './mock/filter';
 import {generateTasks} from './mock/task';
-import {CARDS_QTY, SHOWING_TASKS_COUNT_ON_START} from './const';
-import {addPagination} from './components/addPagination';
+import {CARDS_QTY, RENDER_POSITION, SHOWING_TASKS_COUNT_ON_START} from './const';
 
-const renderContent = (mainElement) => {
-  const filters = generateFilters();
+export const renderTask = (taskListElement, task) => {
+  const taskComponent = new TaskComponent(task);
+  const taskElement = taskComponent.getElement();
 
-  let showingTaskCount = SHOWING_TASKS_COUNT_ON_START;
-  const tasks = generateTasks(CARDS_QTY);
+  const taskEditComponent = new TaskEditComponent(task);
+  taskEditComponent.getElement();
 
-  const renderTasks = (tasksContainer, tasksQty, taskData) => {
-    render(tasksContainer, createTaskFormTemplate(taskData[0]));
+  taskComponent.editClickHandler(taskListElement, taskEditComponent);
+  taskEditComponent.addSubmitHandler(taskListElement, taskComponent);
+  taskEditComponent.addEscHandler(taskListElement, taskComponent, taskEditComponent);
 
-    taskData.slice(1, tasksQty).forEach((task) => render(tasksContainer, createTaskCardTemplate(task)));
-  };
+  render(taskListElement, taskElement);
+};
 
-  render(mainElement, createFilterTemplate(filters));
-  render(mainElement, createBoardTemplate());
+const renderBoard = (boardComponent, tasks) => {
+  const isAllTasksArchived = tasks.every((task) => task.isArchive);
 
-  const boardContainer = siteMainElement.querySelector(`.board`);
-  const boardTasksContainer = siteMainElement.querySelector(`.board__tasks`);
+  if (isAllTasksArchived) {
+    render(boardComponent.getElement(), new NoTasksComponent().getElement());
+    return;
+  }
 
-  renderTasks(boardTasksContainer, showingTaskCount, tasks);
-  render(boardContainer, createButtonMore());
+  render(boardComponent.getElement(), new SortingComponent().getElement(), RENDER_POSITION.AFTERBEGIN);
+  render(boardComponent.getElement(), new TasksComponent().getElement());
 
-  const loadMoreButton = boardContainer.querySelector(`.load-more`);
-  addPagination(loadMoreButton, tasks, showingTaskCount);
+  const tasksContainer = boardComponent.getElement().querySelector(`.board__tasks`);
+
+  tasks.slice(0, SHOWING_TASKS_COUNT_ON_START)
+    .forEach((task) => {
+      renderTask(tasksContainer, task);
+    });
+
+  const loadMoreButton = new LoadMoreButtonComponent(tasks);
+  render(boardComponent.getElement(), loadMoreButton.getElement());
+  loadMoreButton.setClickHandler(tasksContainer);
 };
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-render(siteHeaderElement, createSiteMenuTemplate());
-renderContent(siteMainElement);
+const tasks = generateTasks(CARDS_QTY);
+const filters = generateFilters();
+
+render(siteHeaderElement, new SiteMenuComponent().getElement());
+render(siteMainElement, new FilterComponent(filters).getElement());
+
+const boardComponent = new BoardComponent();
+render(siteMainElement, boardComponent.getElement());
+renderBoard(boardComponent, tasks);

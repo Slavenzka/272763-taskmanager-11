@@ -20,3 +20,8 @@ export const MONTH_NAMES = [
 export const CARDS_QTY = 22;
 export const SHOWING_TASKS_COUNT_ON_START = 8;
 export const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
+
+export const RENDER_POSITION = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+};
