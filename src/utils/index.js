@@ -14,7 +14,6 @@ export const formatTime = (date) => {
 export const createNode = (template) => {
   const node = document.createElement(`div`);
   node.innerHTML = template;
-
   return node.firstChild;
 };
 
