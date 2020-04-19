@@ -1,4 +1,4 @@
-import {createNode} from "../utils";
+import AbstractClass from './abstract-component';
 
 const createNoTasksTemplate = () => {
   return (
@@ -9,24 +9,8 @@ const createNoTasksTemplate = () => {
 };
 
 
-export default class NoTasks {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NoTasks extends AbstractClass {
   getTemplate() {
     return createNoTasksTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
