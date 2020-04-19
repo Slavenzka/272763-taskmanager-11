@@ -1,31 +1,20 @@
-import {createNode} from '../utils';
 import {SHOWING_TASKS_COUNT_BY_BUTTON, SHOWING_TASKS_COUNT_ON_START} from '../const';
 import {renderTask} from '../main';
+import AbstractClass from './abstract-component';
 
 const createButtonMore = () => (
   `<button class="load-more" type="button">load more</button>`
 );
 
-export default class LoadMoreButton {
+export default class LoadMoreButton extends AbstractClass {
   constructor(tasks) {
-    this._element = null;
+    super();
     this._tasksCount = SHOWING_TASKS_COUNT_ON_START;
     this._tasks = tasks;
   }
 
   getTemplate() {
     return createButtonMore();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   setClickHandler(tasksContainer) {
