@@ -14,7 +14,7 @@ import {CARDS_QTY, RENDER_POSITION, SHOWING_TASKS_COUNT_ON_START} from './const'
 
 export const renderTask = (taskListElement, task) => {
   const taskComponent = new TaskComponent(task);
-  const taskElement = taskComponent.getElement();
+  taskComponent.getElement();
 
   const taskEditComponent = new TaskEditComponent(task);
   taskEditComponent.getElement();
@@ -23,19 +23,19 @@ export const renderTask = (taskListElement, task) => {
   taskEditComponent.addSubmitHandler(taskListElement, taskComponent);
   taskEditComponent.addEscHandler(taskListElement, taskComponent, taskEditComponent);
 
-  render(taskListElement, taskElement);
+  render(taskListElement, taskComponent);
 };
 
 const renderBoard = (boardComponent, tasks) => {
   const isAllTasksArchived = tasks.every((task) => task.isArchive);
 
   if (isAllTasksArchived) {
-    render(boardComponent.getElement(), new NoTasksComponent().getElement());
+    render(boardComponent.getElement(), new NoTasksComponent());
     return;
   }
 
-  render(boardComponent.getElement(), new SortingComponent().getElement(), RENDER_POSITION.AFTERBEGIN);
-  render(boardComponent.getElement(), new TasksComponent().getElement());
+  render(boardComponent.getElement(), new SortingComponent(), RENDER_POSITION.AFTERBEGIN);
+  render(boardComponent.getElement(), new TasksComponent());
 
   const tasksContainer = boardComponent.getElement().querySelector(`.board__tasks`);
 
@@ -45,7 +45,7 @@ const renderBoard = (boardComponent, tasks) => {
     });
 
   const loadMoreButton = new LoadMoreButtonComponent(tasks);
-  render(boardComponent.getElement(), loadMoreButton.getElement());
+  render(boardComponent.getElement(), loadMoreButton);
   loadMoreButton.setClickHandler(tasksContainer);
 };
 
@@ -55,9 +55,9 @@ const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 const tasks = generateTasks(CARDS_QTY);
 const filters = generateFilters();
 
-render(siteHeaderElement, new SiteMenuComponent().getElement());
-render(siteMainElement, new FilterComponent(filters).getElement());
+render(siteHeaderElement, new SiteMenuComponent());
+render(siteMainElement, new FilterComponent(filters));
 
 const boardComponent = new BoardComponent();
-render(siteMainElement, boardComponent.getElement());
+render(siteMainElement, boardComponent);
 renderBoard(boardComponent, tasks);

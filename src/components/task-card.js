@@ -1,6 +1,6 @@
 import {MONTH_NAMES} from '../const';
 import {formatTime} from '../utils/index';
-import {createNode} from '../utils/render';
+import {createNode, replace} from '../utils/render';
 
 const createTaskCardTemplate = (task) => {
   const {color, description, dueDate, repeatingDays, isArchive, isFavorite} = task;
@@ -87,7 +87,7 @@ export default class Task {
   editClickHandler(taskListElement, taskEditComponent) {
     const editButton = this._element.querySelector(`.card__btn--edit`);
     editButton.addEventListener(`click`, () => {
-      taskListElement.replaceChild(taskEditComponent.getElement(), this._element);
+      replace(taskListElement, taskEditComponent.getElement(), this._element);
     });
   }
 }

@@ -6,13 +6,13 @@ export const createNode = (template) => {
   return node.firstChild;
 };
 
-export const render = (container, element, location = RENDER_POSITION.BEFOREEND) => {
+export const render = (container, component, location = RENDER_POSITION.BEFOREEND) => {
   switch (location) {
     case RENDER_POSITION.AFTERBEGIN:
-      container.prepend(element);
+      container.prepend(component.getElement());
       break;
     case RENDER_POSITION.BEFOREEND:
-      container.append(element);
+      container.append(component.getElement());
       break;
   }
 };
