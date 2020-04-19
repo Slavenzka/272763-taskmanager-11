@@ -20,3 +20,7 @@ export const render = (container, element, location = RENDER_POSITION.BEFOREEND)
 export const replace = (parent, newElement, oldElement) => {
   parent.replaceChild(newElement, oldElement);
 };
+
+export const remove = (node) => {
+  node.remove();
+};
