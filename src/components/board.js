@@ -1,4 +1,4 @@
-import {createNode} from '../utils';
+import AbstractClass from './abstract-component';
 
 const createBoardTemplate = () => (
   `<section class="board container">
@@ -6,23 +6,8 @@ const createBoardTemplate = () => (
   </section>`
 );
 
-export default class Board {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Board extends AbstractClass {
   getTemplate() {
     return createBoardTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
