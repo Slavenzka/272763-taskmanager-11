@@ -1,4 +1,4 @@
-import {createNode} from '../utils';
+import {createNode} from '../utils/render';
 
 const createSiteMenuTemplate = () => (
   `<section class="control__btn-wrap">

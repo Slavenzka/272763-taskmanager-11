@@ -1,5 +1,6 @@
 import {MONTH_NAMES} from '../const';
-import {createNode, formatTime} from '../utils/index';
+import {formatTime} from '../utils/index';
+import {createNode} from '../utils/render';
 
 const createTaskCardTemplate = (task) => {
   const {color, description, dueDate, repeatingDays, isArchive, isFavorite} = task;

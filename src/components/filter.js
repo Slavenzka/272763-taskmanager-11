@@ -1,4 +1,3 @@
-import {createNode} from '../utils';
 import AbstractClass from './abstract-component';
 
 const createFilterMarkup = (name, count, isChecked) => (

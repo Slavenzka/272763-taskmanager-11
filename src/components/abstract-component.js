@@ -1,4 +1,4 @@
-import {createNode} from '../utils';
+import {createNode} from '../utils/render';
 
 export default class AbstractClass {
   constructor() {

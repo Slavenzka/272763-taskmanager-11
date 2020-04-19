@@ -7,7 +7,7 @@ import LoadMoreButtonComponent from './components/button-more';
 import SiteMenuComponent from './components/menu';
 import SortingComponent from './components/sort';
 import NoTasksComponent from './components/no-tasks';
-import {render} from './utils';
+import {render} from './utils/render';
 import {generateFilters} from './mock/filter';
 import {generateTasks} from './mock/task';
 import {CARDS_QTY, RENDER_POSITION, SHOWING_TASKS_COUNT_ON_START} from './const';
