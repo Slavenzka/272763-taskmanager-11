@@ -1,5 +1,4 @@
 import {SHOWING_TASKS_COUNT_BY_BUTTON, SHOWING_TASKS_COUNT_ON_START} from '../const';
-import {renderTask} from '../main';
 import AbstractClass from './abstract-component';
 
 const createButtonMore = () => (
@@ -7,10 +6,11 @@ const createButtonMore = () => (
 );
 
 export default class LoadMoreButton extends AbstractClass {
-  constructor(tasks) {
+  constructor(tasks, renderTask) {
     super();
     this._tasksCount = SHOWING_TASKS_COUNT_ON_START;
     this._tasks = tasks;
+    this._renderTask = renderTask;
   }
 
   getTemplate() {
@@ -23,7 +23,7 @@ export default class LoadMoreButton extends AbstractClass {
       this._tasksCount += SHOWING_TASKS_COUNT_BY_BUTTON;
 
       this._tasks.slice(prevTasksCounter, this._tasksCount)
-        .forEach((task) => renderTask(tasksContainer, task));
+        .forEach((task) => this._renderTask(tasksContainer, task));
 
       if (this._tasksCount > this._tasks.length) {
         this._element.remove();
