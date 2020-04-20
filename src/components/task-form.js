@@ -1,6 +1,6 @@
 import {COLORS, DAYS, MONTH_NAMES} from '../const';
 import {formatTime} from '../utils/common';
-import {createNode} from '../utils/render';
+import {createNode, replace} from '../utils/render';
 
 const createColorsMarkup = (colors, currentColor) => {
   return colors
@@ -156,17 +156,15 @@ export default class TaskEdit {
     this._element = null;
   }
 
-  replaceEditWithTask(taskListElement, taskComponent) {
-    taskListElement.replaceChild(taskComponent.getElement(), this._element);
-  }
-
   addSubmitHandler(taskListElement, taskComponent) {
+    const submitHandler = (evt) => {
+      evt.preventDefault();
+      replace(taskComponent, this);
+    };
+
     const editForm = this._element.querySelector(`form`);
 
-    editForm.addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
-      this.replaceEditWithTask(taskListElement, taskComponent);
-    });
+    editForm.addEventListener(`submit`, submitHandler);
   }
 
   addEscHandler(taskListElement, taskComponent) {
@@ -174,7 +172,7 @@ export default class TaskEdit {
       const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
       if (isEscKey && document.contains(this._element)) {
-        this.replaceEditWithTask(taskListElement, taskComponent);
+        replace(taskComponent, this);
         document.removeEventListener(`keydown`, escKeyHandler);
       }
     };

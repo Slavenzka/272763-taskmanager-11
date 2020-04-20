@@ -19,9 +19,8 @@ export const renderTask = (taskListElement, task) => {
   const taskEditComponent = new TaskEditComponent(task);
   taskEditComponent.getElement();
 
-  taskComponent.editClickHandler(taskListElement, taskEditComponent);
+  taskComponent.editClickHandler(taskListElement, taskEditComponent, () => taskEditComponent.addEscHandler(taskListElement, taskComponent));
   taskEditComponent.addSubmitHandler(taskListElement, taskComponent);
-  taskEditComponent.addEscHandler(taskListElement, taskComponent, taskEditComponent);
 
   render(taskListElement, taskComponent);
 };
