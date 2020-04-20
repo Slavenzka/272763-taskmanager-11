@@ -1,4 +1,4 @@
-import AbstractClass from './abstract-component';
+import AbstractComponent from './abstract-component';
 
 export const SORT_TYPE = {
   DATE_DOWN: `date-down`,
@@ -16,7 +16,7 @@ const createSortTemplate = () => {
   );
 };
 
-export default class Sorting extends AbstractClass {
+export default class Sorting extends AbstractComponent {
   constructor() {
     super();
     this._currentSortType = SORT_TYPE.DEFAULT;

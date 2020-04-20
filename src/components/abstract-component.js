@@ -1,6 +1,8 @@
-export default class AbstractClass {
+import {createNode} from '../utils/render';
+
+export default class AbstractComponent {
   constructor() {
-    if (new.target === AbstractClass) {
+    if (new.target === AbstractComponent) {
       throw new Error(`Fail on attempt to instantiate abstract class!`);
     }
 
@@ -11,15 +13,9 @@ export default class AbstractClass {
     throw new Error(`Fail on attempt to call abstract method!`);
   }
 
-  createNode(template) {
-    const node = document.createElement(`div`);
-    node.innerHTML = template;
-    return node.firstChild;
-  }
-
   getElement() {
     if (!this._element) {
-      this._element = this.createNode(this.getTemplate());
+      this._element = createNode(this.getTemplate());
     }
     return this._element;
   }

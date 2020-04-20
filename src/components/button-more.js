@@ -1,11 +1,11 @@
 import {SHOWING_TASKS_COUNT_BY_BUTTON, SHOWING_TASKS_COUNT_ON_START} from '../const';
-import AbstractClass from './abstract-component';
+import AbstractComponent from './abstract-component';
 
 const createButtonMore = () => (
   `<button class="load-more" type="button">load more</button>`
 );
 
-export default class LoadMoreButton extends AbstractClass {
+export default class LoadMoreButton extends AbstractComponent {
   constructor(tasks, renderTask) {
     super();
     this._tasksCount = SHOWING_TASKS_COUNT_ON_START;

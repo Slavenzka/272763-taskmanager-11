@@ -1,4 +1,4 @@
-import AbstractClass from './abstract-component';
+import AbstractComponent from './abstract-component';
 
 const createBoardTemplate = () => (
   `<section class="board container">
@@ -6,7 +6,7 @@ const createBoardTemplate = () => (
   </section>`
 );
 
-export default class Board extends AbstractClass {
+export default class Board extends AbstractComponent {
   getTemplate() {
     return createBoardTemplate();
   }
