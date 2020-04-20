@@ -1,5 +1,5 @@
 import {COLORS} from '../const';
-import {getRanodomBoolean} from '../utils';
+import {getRanodomBoolean} from '../utils/common';
 
 const DescriptionItems = [
   `Изучить теорию`,

@@ -1,4 +1,4 @@
-import {render} from '../utils';
+import {render} from 'utils/common';
 import {createTaskCardTemplate} from '../components/task-card';
 import {SHOWING_TASKS_COUNT_BY_BUTTON} from '../const';
 
