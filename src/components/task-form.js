@@ -1,5 +1,7 @@
 import {COLORS, DAYS, MONTH_NAMES} from '../const';
-import {createNode, formatTime} from '../utils/index';
+import {formatTime} from '../utils/common';
+import {replace} from '../utils/render';
+import AbstractComponent from './abstract-component';
 
 const createColorsMarkup = (colors, currentColor) => {
   return colors
@@ -134,38 +136,25 @@ const createTaskFormTemplate = (task) => {
   );
 };
 
-export default class TaskEdit {
+export default class TaskEdit extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskFormTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
-  replaceEditWithTask(taskListElement, taskComponent) {
-    taskListElement.replaceChild(taskComponent.getElement(), this._element);
-  }
-
   addSubmitHandler(taskListElement, taskComponent) {
+    const submitHandler = (evt) => {
+      evt.preventDefault();
+      replace(taskComponent, this);
+    };
+
     const editForm = this._element.querySelector(`form`);
 
-    editForm.addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
-      this.replaceEditWithTask(taskListElement, taskComponent);
-    });
+    editForm.addEventListener(`submit`, submitHandler);
   }
 
   addEscHandler(taskListElement, taskComponent) {
@@ -173,7 +162,7 @@ export default class TaskEdit {
       const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
       if (isEscKey && document.contains(this._element)) {
-        this.replaceEditWithTask(taskListElement, taskComponent);
+        replace(taskComponent, this);
         document.removeEventListener(`keydown`, escKeyHandler);
       }
     };
