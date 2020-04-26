@@ -1,6 +1,5 @@
 import {MONTH_NAMES} from '../const';
 import {formatTime} from '../utils/common';
-import {replace} from '../utils/render';
 import AbstractComponent from './abstract-component';
 
 const createTaskCardTemplate = (task) => {
@@ -74,13 +73,8 @@ export default class Task extends AbstractComponent {
     return createTaskCardTemplate(this._task);
   }
 
-  editClickHandler(taskListElement, taskEditComponent, callback) {
+  editClickHandler(handler) {
     const editButton = this._element.querySelector(`.card__btn--edit`);
-    editButton.addEventListener(`click`, () => {
-      replace(taskEditComponent, this);
-      if (callback) {
-        callback();
-      }
-    });
+    editButton.addEventListener(`click`, handler);
   }
 }

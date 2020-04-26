@@ -1,6 +1,5 @@
 import {COLORS, DAYS, MONTH_NAMES} from '../const';
 import {formatTime} from '../utils/common';
-import {replace} from '../utils/render';
 import AbstractComponent from './abstract-component';
 
 const createColorsMarkup = (colors, currentColor) => {
@@ -146,26 +145,25 @@ export default class TaskEdit extends AbstractComponent {
     return createTaskFormTemplate(this._task);
   }
 
-  addSubmitHandler(taskListElement, taskComponent) {
-    const submitHandler = (evt) => {
-      evt.preventDefault();
-      replace(taskComponent, this);
-    };
+  addSubmitHandler(submitHandler) {
+    // const submitHandler = (evt) => {
+    //   evt.preventDefault();
+    //   replace(taskComponent, this);
+    // };
 
     const editForm = this._element.querySelector(`form`);
-
     editForm.addEventListener(`submit`, submitHandler);
   }
 
-  addEscHandler(taskListElement, taskComponent) {
-    const escKeyHandler = (evt) => {
-      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-      if (isEscKey && document.contains(this._element)) {
-        replace(taskComponent, this);
-        document.removeEventListener(`keydown`, escKeyHandler);
-      }
-    };
+  addEscHandler(escKeyHandler) {
+    // const escKeyHandler = (evt) => {
+    //   const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+    //
+    //   if (isEscKey && document.contains(this._element)) {
+    //     replace(taskComponent, this);
+    //     document.removeEventListener(`keydown`, escKeyHandler);
+    //   }
+    // };
 
     document.addEventListener(`keydown`, escKeyHandler);
   }
