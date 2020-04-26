@@ -1,12 +1,14 @@
 import TaskComponent from '../components/task-card';
 import TaskEditComponent from '../components/task-form';
 import {render, replace} from '../utils/render';
+import {MODE} from '../const';
 
 export default class TaskController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
-
+    this._onViewChange = onViewChange;
+    this._mode = MODE.DEFAULT;
     this._taskComponent = null;
     this._taskEditComponent = null;
 
@@ -50,13 +52,23 @@ export default class TaskController {
     }
   }
 
+  setDefaultView() {
+    if (this._mode !== MODE.DEFAULT) {
+      this._replaceEditToTask();
+    }
+  }
+
   _replaceEditToTask() {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._taskEditComponent.reset();
     replace(this._taskComponent, this._taskEditComponent);
+    this._mode = MODE.DEFAULT;
   }
 
   _replaceTaskToEdit() {
+    this._onViewChange();
     replace(this._taskEditComponent, this._taskComponent);
+    this._mode = MODE.EDIT;
   }
 
   _onEscKeyDown(evt) {
