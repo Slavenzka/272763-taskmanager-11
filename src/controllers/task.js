@@ -7,6 +7,8 @@ export default class TaskController {
     this._container = container;
     this._taskComponent = null;
     this._taskEditComponent = null;
+
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   render(task) {
@@ -16,7 +18,7 @@ export default class TaskController {
     this._taskComponent.getElement();
     this._taskEditComponent.getElement();
 
-    this._taskComponent.editClickHandler(() => {
+    this._taskComponent.setEditClickHandler(() => {
       this._replaceTaskToEdit();
     });
 
@@ -34,6 +36,7 @@ export default class TaskController {
   }
 
   _replaceTaskToEdit() {
+    document.addEventListener(`keydown`, this._onEscKeyDown);
     replace(this._taskEditComponent, this._taskComponent);
   }
 
