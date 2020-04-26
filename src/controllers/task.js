@@ -26,13 +26,13 @@ export default class TaskController {
     });
 
     this._taskComponent.setFavoritesClickHandler(() => {
-      this._onDataChange(this, task, Object.assign({}, task, {
+      this._onDataChange(task, Object.assign({}, task, {
         isFavorite: !task.isFavorite
       }));
     });
 
     this._taskComponent.setArchiveClickHandler(() => {
-      this._onDataChange(this, task, Object.assign({}, task, {
+      this._onDataChange(task, Object.assign({}, task, {
         isArchive: !task.isArchive
       }));
     });
