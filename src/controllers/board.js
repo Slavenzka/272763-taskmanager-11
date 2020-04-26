@@ -9,9 +9,9 @@ import LoadMoreButtonComponent from '../components/button-more';
 import TaskController from './task';
 import TasksComponent from '../components/tasks';
 
-const renderTasks = (tasks, tasksContainer) => {
+const renderTasks = (tasks, tasksContainer, onDataChange) => {
   return tasks.map((task) => {
-    const taskController = new TaskController(tasksContainer);
+    const taskController = new TaskController(tasksContainer, onDataChange);
     taskController.render(task);
     return taskController;
   });
@@ -47,6 +47,7 @@ export default class BoardController {
     this._sortComponent = new SortingComponent();
     this._loadMoreButtonComponent = new LoadMoreButtonComponent();
 
+    this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
@@ -67,7 +68,7 @@ export default class BoardController {
 
     const tasksContainer = this._tasksComponent.getElement();
 
-    const newTasks = renderTasks(this._tasks.slice(0, this._showingTasksCount), tasksContainer);
+    const newTasks = renderTasks(this._tasks.slice(0, this._showingTasksCount), tasksContainer, this._onDataChange);
     this._showedTasksControllers = this._showedTasksControllers.concat(newTasks);
 
     this._renderLoadMoreButton();
@@ -87,7 +88,7 @@ export default class BoardController {
       this._showingTasksCount += SHOWING_TASKS_COUNT_BY_BUTTON;
 
       const sortedTasks = getSortedTasks(this._tasks, this._sortComponent.getSortType(), prevTasksCount, this._showingTasksCount);
-      const newTasks = renderTasks(sortedTasks, taskListElement);
+      const newTasks = renderTasks(sortedTasks, taskListElement, this._onDataChange);
       this._showedTasksControllers = this._showedTasksControllers.concat(newTasks);
 
       if (this._showingTasksCount >= this._tasks.length) {
@@ -104,11 +105,22 @@ export default class BoardController {
 
     taskListElement.innerHTML = ``;
 
-    const newTasks = renderTasks(sortedTasks, taskListElement);
-    this._showedTasksControllers = newTasks;
+    this._showedTasksControllers = renderTasks(sortedTasks, taskListElement, this._onDataChange);
 
     renderTasks(taskListElement, sortedTasks);
     this._renderLoadMoreButton();
+  }
+
+  _onDataChange(taskController, oldData, newData) {
+    const index = this._tasks.findIndex((item) => item === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._tasks = [].concat(this._tasks.slice(0, index), newData, this._tasks.slice(index + 1));
+
+    taskController.render(this._tasks[index]);
   }
 }
 

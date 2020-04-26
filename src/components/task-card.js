@@ -77,7 +77,7 @@ export default class Task extends AbstractComponent {
   }
 
   setEditClickHandler(handler) {
-    const editButton = this._element.querySelector(`.card__btn--edit`);
+    const editButton = this.getElement().querySelector(`.card__btn--edit`);
     editButton.addEventListener(`click`, handler);
   }
 

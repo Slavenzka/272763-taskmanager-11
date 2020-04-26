@@ -146,25 +146,7 @@ export default class TaskEdit extends AbstractComponent {
   }
 
   addSubmitHandler(submitHandler) {
-    // const submitHandler = (evt) => {
-    //   evt.preventDefault();
-    //   replace(taskComponent, this);
-    // };
-
-    const editForm = this._element.querySelector(`form`);
+    const editForm = this.getElement().querySelector(`form`);
     editForm.addEventListener(`submit`, submitHandler);
-  }
-
-  addEscHandler(escKeyHandler) {
-    // const escKeyHandler = (evt) => {
-    //   const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-    //
-    //   if (isEscKey && document.contains(this._element)) {
-    //     replace(taskComponent, this);
-    //     document.removeEventListener(`keydown`, escKeyHandler);
-    //   }
-    // };
-
-    document.addEventListener(`keydown`, escKeyHandler);
   }
 }
