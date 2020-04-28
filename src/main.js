@@ -17,7 +17,7 @@ render(siteHeaderElement, new SiteMenuComponent());
 render(siteMainElement, new FilterComponent(filters));
 
 const boardComponent = new BoardComponent();
-render(siteMainElement, boardComponent);
-
 const controller = new BoardController(boardComponent);
+
+render(siteMainElement, boardComponent);
 controller.render(tasks);
