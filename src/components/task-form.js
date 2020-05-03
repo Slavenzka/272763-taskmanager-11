@@ -1,6 +1,7 @@
 import {COLORS, DAYS} from '../const';
 import {formatDate, formatTime, isRepeating, isOverdueDate} from '../utils/common';
 import AbstractSmartComponent from './abstract-smart-component';
+import {encode} from 'he';
 import flatpickr from 'flatpickr';
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -64,7 +65,8 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
 
 const createTaskEditTemplate = (task, options = {}) => {
   const {dueDate, color} = task;
-  const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription: description} = options;
+  const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription} = options;
+  const description = encode(currentDescription);
 
   const isExpired = dueDate instanceof Date && isOverdueDate(dueDate, new Date());
   const isBlockSaveButton = (isDateShowing && isRepeatingTask)
