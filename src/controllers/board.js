@@ -1,6 +1,6 @@
 import {render, remove} from '../utils/render';
 import NoTasksComponent from '../components/no-tasks';
-import SortingComponent, {SORT_TYPE} from '../components/sort';
+import SortingComponent, {SortType} from '../components/sort';
 import {
   MODE,
   SHOWING_TASKS_COUNT_BY_BUTTON,
@@ -9,6 +9,7 @@ import {
 import LoadMoreButtonComponent from '../components/button-more';
 import TaskController, {emptyTask} from './task';
 import TasksComponent from '../components/tasks';
+import sort from '../components/sort';
 
 const renderTasks = (taskListElement, tasks, onDataChange, onViewChange) => {
   return tasks.map((task) => {
@@ -24,16 +25,17 @@ const getSortedTasks = (tasks, sortType, from, to) => {
   const showingTasks = tasks.slice();
 
   switch (sortType) {
-    case SORT_TYPE.DATE_DOWN:
-      sortedTasks = showingTasks.sort((a, b) => a.dueDate < b.dueDate);
+    case SortType.DATE_UP:
+      sortedTasks = showingTasks.sort((a, b) => a.dueDate - b.dueDate);
       break;
-    case SORT_TYPE.DATE_UP:
-      sortedTasks = showingTasks.sort((a, b) => a.dueDate > b.dueDate);
+    case SortType.DATE_DOWN:
+      sortedTasks = showingTasks.sort((a, b) => b.dueDate - a.dueDate);
       break;
-    case SORT_TYPE.DEFAULT:
+    case SortType.DEFAULT:
       sortedTasks = showingTasks;
       break;
   }
+
   return sortedTasks.slice(from, to);
 };
 
@@ -157,9 +159,7 @@ export default class BoardController {
 
   _onSortTypeChange(sortType) {
     this._showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-
     const sortedTasks = getSortedTasks(this._tasksModel.getTasks(), sortType, 0, this._showingTasksCount);
-
     this._removeTasks();
     this._renderTasks(sortedTasks);
 
