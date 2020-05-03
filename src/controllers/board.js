@@ -49,9 +49,11 @@ export default class BoardController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._tasksModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -66,16 +68,22 @@ export default class BoardController {
 
     render(container, this._sortComponent);
     render(container, this._tasksComponent);
-
-    const tasksContainer = this._tasksComponent.getElement();
-
-    const newTasks = renderTasks(tasks.slice(0, this._showingTasksCount), tasksContainer, this._onDataChange, this._onViewChange);
-    this._showedTasksControllers = this._showedTasksControllers.concat(newTasks);
+    this._renderTasks(tasks.slice(0, this._showingTasksCount));
 
     this._renderLoadMoreButton();
   }
 
+  _renderTasks(tasks) {
+    const taskListElement = this._tasksComponent.getElement();
+
+    const newTasks = renderTasks(tasks, taskListElement, this._onDataChange, this._onViewChange);
+    this._showedTasksControllers = this._showedTasksControllers.concat(newTasks);
+    this._showingTasksCount = this._showedTasksControllers.length;
+  }
+
   _renderLoadMoreButton() {
+    remove(this._loadMoreButtonComponent);
+
     if (this._showingTasksCount >= this._tasksModel.getTasks().length) {
       return;
     }
@@ -92,11 +100,17 @@ export default class BoardController {
       const sortedTasks = getSortedTasks(tasks, this._sortComponent.getSortType(), prevTasksCount, this._showingTasksCount);
       const newTasks = renderTasks(sortedTasks, taskListElement, this._onDataChange, this._onViewChange);
       this._showedTasksControllers = this._showedTasksControllers.concat(newTasks);
-
-      if (this._showingTasksCount >= tasks.length) {
-        remove(this._loadMoreButtonComponent);
-      }
     });
+  }
+
+  _removeTasks() {
+    this._showedTasksControllers.forEach((taskController) => taskController.destroy());
+    this._showedTasksControllers = [];
+  }
+
+  _updateTasks(count) {
+    this._removeTasks();
+    this._renderTasks(this._tasksModel.getTasks().slice(0, count));
   }
 
   _onSortTypeChange(sortType) {
@@ -120,15 +134,10 @@ export default class BoardController {
     if (isSuccess.status) {
       this._showedTasksControllers[isSuccess.index].render(newData);
     }
-    // const index = this._tasks.findIndex((item) => item === oldData);
-    //
-    // if (index === -1) {
-    //   return;
-    // }
-    //
-    // this._tasks = [].concat(this._tasks.slice(0, index), newData, this._tasks.slice(index + 1));
-    //
-    // this._showedTasksControllers[index].render(this._tasks[index]);
+  }
+
+  _onFilterChange() {
+    this._updateTasks(SHOWING_TASKS_COUNT_ON_START);
   }
 }
 
