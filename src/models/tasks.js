@@ -1,17 +1,31 @@
+import {FilterType} from '../const';
+import {getTasksByFilter} from '../utils/filter';
+
 export default class TasksModel {
   constructor() {
     this._tasks = [];
+    this._activeFilterType = FilterType.ALL;
 
     this._dataChangeHandlers = [];
+    this._filterChangeHandlers = [];
   }
 
   getTasks() {
+    return getTasksByFilter(this._tasks, this._activeFilterType);
+  }
+
+  getTasksAll() {
     return this._tasks;
   }
 
   setTasks(tasks) {
     this._tasks = Array.from(tasks);
     this._callHandlers(this._dataChangeHandlers);
+  }
+
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
   }
 
   updateTask(id, task) {
