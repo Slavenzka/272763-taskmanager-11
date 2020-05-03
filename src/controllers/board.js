@@ -9,7 +9,6 @@ import {
 import LoadMoreButtonComponent from '../components/button-more';
 import TaskController, {emptyTask} from './task';
 import TasksComponent from '../components/tasks';
-import sort from '../components/sort';
 
 const renderTasks = (taskListElement, tasks, onDataChange, onViewChange) => {
   return tasks.map((task) => {
