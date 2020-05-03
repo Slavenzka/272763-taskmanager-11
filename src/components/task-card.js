@@ -12,7 +12,7 @@ const createButtonMarkup = (name, isActive = true) => {
   );
 };
 
-const createTaskCardTemplate = (task) => {
+const createTaskTemplate = (task) => {
   const {color, description, dueDate, repeatingDays} = task;
 
   const isExpired = dueDate instanceof Date && isOverdueDate(dueDate, new Date());
@@ -68,25 +68,26 @@ const createTaskCardTemplate = (task) => {
 export default class Task extends AbstractComponent {
   constructor(task) {
     super();
+
     this._task = task;
   }
 
   getTemplate() {
-    return createTaskCardTemplate(this._task);
+    return createTaskTemplate(this._task);
   }
 
-  setEditClickHandler(handler) {
-    const editButton = this.getElement().querySelector(`.card__btn--edit`);
-    editButton.addEventListener(`click`, handler);
+  setEditButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--edit`)
+      .addEventListener(`click`, handler);
   }
 
-  setFavoritesClickHandler(handler) {
-    const favoritesButton = this.getElement().querySelector(`.card__btn--favorites`);
-    favoritesButton.addEventListener(`click`, handler);
+  setFavoritesButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--favorites`)
+      .addEventListener(`click`, handler);
   }
 
-  setArchiveClickHandler(handler) {
-    const archiveButton = this.getElement().querySelector(`.card__btn--archive`);
-    archiveButton.addEventListener(`click`, handler);
+  setArchiveButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--archive`)
+      .addEventListener(`click`, handler);
   }
 }

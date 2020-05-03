@@ -21,7 +21,8 @@ export const RENDER_POSITION = {
 
 export const MODE = {
   DEFAULT: `default`,
-  EDIT: `edit`
+  EDIT: `edit`,
+  ADDING: `adding`
 };
 
 export const FilterType = {

@@ -4,6 +4,16 @@ import AbstractSmartComponent from './abstract-smart-component';
 import flatpickr from 'flatpickr';
 import "flatpickr/dist/flatpickr.min.css";
 
+const MIN_DESCRIPTION_LENGTH = 1;
+const MAX_DESCRIPTION_LENGTH = 140;
+
+const isAllowableDescriptionLength = (description) => {
+  const length = description.length;
+
+  return length >= MIN_DESCRIPTION_LENGTH &&
+    length <= MAX_DESCRIPTION_LENGTH;
+};
+
 const createColorsMarkup = (colors, currentColor) => {
   return colors
     .map((color, index) => {
@@ -52,12 +62,14 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
     .join(`\n`);
 };
 
-const createTaskFormTemplate = (task, options = {}) => {
-  const {description, dueDate, color} = task;
-  const {isDateShowing, isRepeatingTask, activeRepeatingDays} = options;
+const createTaskEditTemplate = (task, options = {}) => {
+  const {dueDate, color} = task;
+  const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription: description} = options;
 
   const isExpired = dueDate instanceof Date && isOverdueDate(dueDate, new Date());
-  const isBlockSaveButton = (isDateShowing && isRepeatingTask) || (isRepeatingTask && !!isRepeating(activeRepeatingDays));
+  const isBlockSaveButton = (isDateShowing && isRepeatingTask)
+    || (isRepeatingTask && !!isRepeating(activeRepeatingDays))
+    || isAllowableDescriptionLength(description);
 
   const date = (isDateShowing && dueDate) ? `${formatDate(dueDate)}` : ``;
   const time = (isDateShowing && dueDate) ? `${formatTime(dueDate)}` : ``;
@@ -137,41 +149,69 @@ const createTaskFormTemplate = (task, options = {}) => {
   );
 };
 
+const parseFormData = (formData) => {
+  const repeatingDays = DAYS.reduce((acc, day) => {
+    acc[day] = false;
+    return acc;
+  }, {});
+
+  const date = formData.get(`date`);
+
+  return {
+    description: formData.get(`text`),
+    color: formData.get(`color`),
+    dueDate: date ? new Date(date) : null,
+    repeatingDays: formData.getAll(`repeat`).reduce((acc, day) => {
+      acc[day] = true;
+      return acc;
+    }, repeatingDays),
+  };
+};
+
 export default class TaskEdit extends AbstractSmartComponent {
   constructor(task) {
     super();
+
     this._task = task;
     this._isDateShowing = !!task.dueDate;
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
+    this._currentDescription = task.description;
     this._flatpickr = null;
     this._submitHandler = null;
+    this._deleteButtonClickHandler = null;
 
     this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createTaskFormTemplate(this._task, {
+    return createTaskEditTemplate(this._task, {
       isDateShowing: this._isDateShowing,
       isRepeatingTask: this._isRepeatingTask,
       activeRepeatingDays: this._activeRepeatingDays,
+      currentDescription: this._currentDescription,
     });
   }
 
-  addSubmitHandler(submitHandler) {
-    const editForm = this.getElement().querySelector(`form`);
-    editForm.addEventListener(`submit`, submitHandler);
-    this._submitHandler = submitHandler;
+  removeElement() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    super.removeElement();
   }
 
   recoveryListeners() {
-    this.addSubmitHandler(this._submitHandler);
+    this.setSubmitHandler(this._submitHandler);
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this._subscribeOnEvents();
   }
 
   rerender() {
     super.rerender();
+
     this._applyFlatpickr();
   }
 
@@ -180,34 +220,31 @@ export default class TaskEdit extends AbstractSmartComponent {
 
     this._isDateShowing = !!task.dueDate;
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
-    this._activeRepeatingDays = Object.assign({}, task.activeRepeatingDays);
+    this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
+    this._currentDescription = task.description;
 
     this.rerender();
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
+  getData() {
+    const form = this.getElement().querySelector(`.card__form`);
+    const formData = new FormData(form);
 
-    element.querySelector(`.card__date-deadline-toggle`)
-      .addEventListener(`click`, () => {
-        this._isDateShowing = !this._isDateShowing;
-        this.rerender();
-      });
+    return parseFormData(formData);
+  }
 
-    element.querySelector(`.card__repeat-toggle`)
-      .addEventListener(`click`, () => {
-        this._isRepeatingTask = !this._isRepeatingTask;
-        this.rerender();
-      });
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`submit`, handler);
 
-    const repeatDays = element.querySelector(`.card__repeat-days`);
-    if (repeatDays) {
-      repeatDays.addEventListener(`change`, (evt) => {
-        this._activeRepeatingDays[evt.target.value] = evt.target.checked;
+    this._submitHandler = handler;
+  }
 
-        this.rerender();
-      });
-    }
+  setDeleteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__delete`)
+      .addEventListener(`click`, handler);
+
+    this._deleteButtonClickHandler = handler;
   }
 
   _applyFlatpickr() {
@@ -221,7 +258,42 @@ export default class TaskEdit extends AbstractSmartComponent {
       this._flatpickr = flatpickr(dateElement, {
         altInput: true,
         allowInput: true,
-        defaultDate: this._task.dueDate || `today`
+        defaultDate: this._task.dueDate || `today`,
+      });
+    }
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.card__text`)
+      .addEventListener(`input`, (evt) => {
+        this._currentDescription = evt.target.value;
+
+        const saveButton = this.getElement().querySelector(`.card__save`);
+        saveButton.disabled = !isAllowableDescriptionLength(this._currentDescription);
+      });
+
+    element.querySelector(`.card__date-deadline-toggle`)
+      .addEventListener(`click`, () => {
+        this._isDateShowing = !this._isDateShowing;
+
+        this.rerender();
+      });
+
+    element.querySelector(`.card__repeat-toggle`)
+      .addEventListener(`click`, () => {
+        this._isRepeatingTask = !this._isRepeatingTask;
+
+        this.rerender();
+      });
+
+    const repeatDays = element.querySelector(`.card__repeat-days`);
+    if (repeatDays) {
+      repeatDays.addEventListener(`change`, (evt) => {
+        this._activeRepeatingDays[evt.target.value] = evt.target.checked;
+
+        this.rerender();
       });
     }
   }
