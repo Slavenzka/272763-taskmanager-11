@@ -28,6 +28,29 @@ export default class TasksModel {
     this._callHandlers(this._filterChangeHandlers);
   }
 
+  removeTask(id) {
+    const index = this._tasks.findIndex((item) => item.id === id);
+
+    if (index === -1) {
+      return {
+        status: false
+      };
+    }
+
+    this._tasks = [].concat(this._tasks.slice(0, index), this._tasks.slice(index + 1));
+    this._callHandlers(this._dataChangeHandlers);
+
+    return {
+      status: true,
+      index
+    };
+  }
+
+  addTask(task) {
+    this._tasks = [].concat(task, this._tasks);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
   updateTask(id, task) {
     const index = this._tasks.findIndex((item) => item.id === id);
 

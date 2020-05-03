@@ -2,11 +2,12 @@ import {render, remove} from '../utils/render';
 import NoTasksComponent from '../components/no-tasks';
 import SortingComponent, {SORT_TYPE} from '../components/sort';
 import {
+  MODE,
   SHOWING_TASKS_COUNT_BY_BUTTON,
   SHOWING_TASKS_COUNT_ON_START,
 } from '../const';
 import LoadMoreButtonComponent from '../components/button-more';
-import TaskController from './task';
+import TaskController, {emptyTask} from './task';
 import TasksComponent from '../components/tasks';
 
 const renderTasks = (tasks, tasksContainer, onDataChange, onViewChange) => {
@@ -132,11 +133,36 @@ export default class BoardController {
     this._showedTasksControllers.forEach((item) => item.setDefaultView());
   }
 
-  _onDataChange(oldData, newData) {
-    const isSuccess = this._tasksModel.updateTask(oldData.id, newData);
+  _onDataChange(oldData, newData, taskController) {
+    if (oldData === emptyTask) {
+      this._creatingTask = null;
 
-    if (isSuccess.status) {
-      this._showedTasksControllers[isSuccess.index].render(newData);
+      if (newData === null) {
+        taskController.destroy();
+        this._updateTasks(this._showingTasksCount);
+      } else {
+        this._tasksModel.addTask(newData);
+        taskController.render(newData, MODE.DEFAULT);
+
+        if (this._showingTasksCount % SHOWING_TASKS_COUNT_BY_BUTTON === 0) {
+          const destroyedTask = this._showedTasksControllers.pop();
+          destroyedTask.destroy();
+        }
+
+        this._showedTaskControllers = [].concat(taskController, this._showedTaskControllers);
+        this._showingTasksCount = this._showedTaskControllers.length;
+
+        this._renderLoadMoreButton();
+      }
+    } else if (newData === null) {
+      this._tasksModel.removeTask(oldData.id);
+      this._updateTasks(this._showingTasksCount);
+    } else {
+      const isSuccess = this._tasksModel.updateTask(oldData.id, newData);
+
+      if (isSuccess.status) {
+        this._showedTasksControllers[isSuccess.index].render(newData);
+      }
     }
   }
 

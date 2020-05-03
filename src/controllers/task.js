@@ -3,6 +3,8 @@ import TaskEditComponent from '../components/task-form';
 import {render, replace, remove} from '../utils/render';
 import {MODE} from '../const';
 
+export const emptyTask = {};
+
 export default class TaskController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
